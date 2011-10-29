@@ -1,0 +1,3 @@
+A tiny ruby rack application which exposes the data from facter as JSON over HTTP.
+
+    rackup -p {port} web-facter.ru
