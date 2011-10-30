@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'rack'
+require 'web-facter'
+
+Rack::Server.new(:app => WebFacter::App.new, :Port => 9294, :daemonize => true).start
