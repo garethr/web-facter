@@ -1,3 +1,5 @@
 A tiny ruby rack application which exposes the data from facter as JSON over HTTP.
 
-    rackup -p {port} web-facter.ru
+    gem install web-facter
+
+Currently this is pretty raw. I plan on making it a little more configurable shortly at which point I'll write a proper README.
