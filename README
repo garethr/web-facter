@@ -2,7 +2,7 @@ A tiny ruby rack application which exposes the data from facter as JSON over HTT
 
     gem install web-facter
 
-Provides a simple command line tool which runs a build in web server. On accessing
+Provides a simple command line tool which runs a built in web server. On accessing
 the specified port you should get a JSON response containing the current facts.
 
     web-facter --help
