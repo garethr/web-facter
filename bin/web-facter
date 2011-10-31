@@ -3,6 +3,7 @@
 require 'rack'
 require 'optparse'
 require 'web-facter'
+require 'parseconfig'
 
 options = {}
 
@@ -13,7 +14,7 @@ optparse = OptionParser.new do |opts|
   opts.separator 'Configuration options:'
 
   options[:daemonize] = true
-  opts.on( '--no-daemonize', "Don't daemonize the web server process") do |username|
+  opts.on( '--no-daemonize', "Don't daemonize the web server process") do |_|
     options[:daemonize] = false
   end
 
@@ -22,10 +23,12 @@ optparse = OptionParser.new do |opts|
     options[:port] = port
   end
 
-  opts.separator ""
-  opts.separator "Common options:"
+  options[:config] = false
+  opts.on( '-c', '--config FILE', 'The file to load with configuration options') do |file|
+    options[:config] = file
+  end
 
-  opts.on_tail('-h', '--help', 'Display this screen' ) do
+  opts.on_tail('-h', '--help', 'Display this screen') do
     puts opts
     exit
   end
@@ -33,9 +36,34 @@ end
 
 begin
   optparse.parse!
-  Rack::Server.new(:app => WebFacter::App.new, :Port => options[:port], :daemonize => options[:daemonize]).start
+
+  application = WebFacter::App.new
+
+  daemonize = options[:daemonize]
+  port = options[:port]
+
+  if options[:config]
+    conf = ParseConfig.new(options[:config])
+
+    if conf.get_value('password')
+      application = Rack::Auth::Basic.new(application) do |username, password|
+        username_check = conf.get_value('username') ? conf.get_value('username') == username : true
+        password_check = conf.get_value('password') == password
+        username_check && password_check
+      end
+      application.realm = 'Web Facter'
+    end
+
+    port = conf.get_value('port') ? conf.get_value('port') : port
+    daemonize = conf.get_value('daemonize') ? conf.get_value('daemonize') == "true" : daemonize
+  end
+
+  Rack::Server.new(:app => application, :Port => port, :daemonize => daemonize).start
 rescue OptionParser::InvalidArgument, OptionParser::InvalidOption, OptionParser::MissingArgument
   puts $!.to_s
   puts optparse
+  exit
+rescue Errno::EACCES
+  puts $!.to_s
   exit
 end

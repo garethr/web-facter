@@ -11,7 +11,17 @@ the specified port you should get a JSON response containing the current facts.
     Configuration options:
             --no-daemonize               Don't daemonize the web server process
         -p, --port PORT                  The port to run web-facter on
+        -c, --config FILE                The file to load with configuration options
+        -h, --help                       Display this screenp
 
-    Common options:
-        -h, --help                       Display this screen
 
+You can configure web-facter using a configuration file, using the following format, and
+specifying the filename with the --config option above.
+
+    username=gilbert
+    password=george
+    port=3009
+    daemonize=true
+
+Note that the port and daemonize options will override those on the command line.
+The username and password options enable HTTP basic authentication using those details.
