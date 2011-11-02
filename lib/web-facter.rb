@@ -38,7 +38,7 @@ module  WebFacter
       end
 
       Rack::Server.new(:app => application, :Port => port, :daemonize => daemonize).start
-r
+
     end
   end
 end
