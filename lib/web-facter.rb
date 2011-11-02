@@ -15,7 +15,8 @@ module  WebFacter
 
     def add_auth(conf)
       application = Rack::Auth::Basic.new(self) do |username, password|
-        username_check = conf.get_value('username') ? conf.get_value('username') == username : true
+        stored_username = conf.get_value('username')
+        username_check = stored_username ? stored_username == username : true
         password_check = conf.get_value('password') == password
         username_check && password_check
       end
