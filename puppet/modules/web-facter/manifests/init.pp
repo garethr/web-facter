@@ -1,4 +1,8 @@
-class webfacter {
+class webfacter(
+  $port = '9294',
+  $username = nil,
+  $password = nil
+) {
 
   package { "web-facter":
     ensure   => installed,
