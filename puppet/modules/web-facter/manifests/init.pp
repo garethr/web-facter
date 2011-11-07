@@ -1,11 +1,11 @@
 class webfacter(
   $port = '9294',
-  $username = nil,
-  $password = nil
+  $username = false,
+  $password = false
 ) {
 
   package { "web-facter":
-    ensure   => installed,
+    ensure   => latest,
     provider => gem,
   }
 
@@ -15,7 +15,7 @@ class webfacter(
     notify  => Service['web-facter'],
   }
 
-  file { "/etc/init/web-facter":
+  file { "/etc/init/web-facter.conf":
     ensure  => present,
     source  => "puppet:///modules/web-facter/web-facter",
   }
@@ -25,7 +25,7 @@ class webfacter(
     provider => upstart,
     require  => [
       Package["web-facter"],
-      File["/etc/init/web-facter"],
+      File["/etc/init/web-facter.conf"],
     ]
   }
 
