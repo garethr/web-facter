@@ -6,10 +6,19 @@ require 'parseconfig'
 
 module  WebFacter
   class App
+
+    def initialize(filters=[])
+      @filters = filters
+    end
+
     def call(env)
       response = Rack::Response.new
       response.header['Content-Type'] = 'application/json'
-      response.write JSON.pretty_generate(Facter.to_hash)
+      facts = Facter.to_hash.dup
+      @filters.each do |filter|
+        facts.delete(filter.strip)
+      end
+      response.write JSON.pretty_generate(facts)
       response.finish
     end
 
@@ -25,13 +34,19 @@ module  WebFacter
     end
 
     def self.run!(options)
-      application = self.new
+
+      conf = options[:config] ? ParseConfig.new(options[:config]) : false
+
+      if conf && conf.get_value('filters')
+        application = self.new(conf.get_value('filters').split(','))
+      else
+        application = self.new
+      end
 
       daemonize = options[:daemonize]
       port = options[:port]
 
-      if options[:config]
-        conf = ParseConfig.new(options[:config])
+      if conf
         application = application.add_auth(conf) if conf.get_value('password')
         daemonize = conf.get_value('daemonize') ? conf.get_value('daemonize') == "true" : daemonize
         port = conf.get_value('port') ? conf.get_value('port') : port
