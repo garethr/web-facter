@@ -44,3 +44,18 @@ class AuthenticationTest < Test::Unit::TestCase
   end
 
 end
+
+class FilterTest < Test::Unit::TestCase
+  include Rack::Test::Methods
+
+  def app
+    WebFacter::App.new(["architecture"])
+  end
+
+  def test_view_filters_one_key
+    get "/"
+    json = JSON.load(last_response.body)
+    assert !json.keys.include?("architecture")
+  end
+
+end
