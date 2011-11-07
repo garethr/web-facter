@@ -22,6 +22,14 @@ specifying the filename with the --config option above.
     password=george
     port=3009
     daemonize=true
+    filters="ec2_public_keys_0_openssh_key, ec2_userdata, sshdsakey, sshrsakey"
 
-Note that the port and daemonize options will override those on the command line.
-The username and password options enable HTTP basic authentication using those details.
+Note that the port and daemonize options will override those on the command line. The username and password options enable HTTP basic authentication using details specified.
+
+The filters option will remove sensitive items from the output, you can specify any keys you like and they'll be remove automatically.
+
+If you're using puppet (highly likely if you're using facter) then the provided puppet module might be of use. Include in your puppet module diretory and modify as needed. You can use like so:
+
+    import "web-facter"
+    class { "webfacter": username => "username", password => "password" }
+
