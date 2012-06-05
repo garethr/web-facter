@@ -1,6 +1,6 @@
 source :rubygems
 
-gem "json", :platforms => :mri_18
+gem "json_pure", :platforms => :mri_18
 
 gem "facter"
 gem "rack"

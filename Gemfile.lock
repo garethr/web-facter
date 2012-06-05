@@ -2,7 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     facter (1.6.2)
-    json (1.6.7)
+    json_pure (1.6.7)
     metaclass (0.0.1)
     mocha (0.10.0)
       metaclass (~> 0.0.1)
@@ -18,7 +18,7 @@ PLATFORMS
 
 DEPENDENCIES
   facter
-  json
+  json_pure
   mocha
   parseconfig
   rack
