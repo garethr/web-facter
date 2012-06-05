@@ -34,7 +34,6 @@ module  WebFacter
     end
 
     def self.run!(options)
-
       conf = options[:config] ? ParseConfig.new(options[:config]) : false
 
       if conf && conf.get_value('filters')
@@ -53,9 +52,7 @@ module  WebFacter
       end
 
       Rack::Server.new(:app => application, :Port => port, :daemonize => daemonize).start
-
     end
+
   end
 end
-
-
